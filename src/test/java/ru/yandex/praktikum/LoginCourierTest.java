@@ -1,70 +1,40 @@
 package ru.yandex.praktikum;
 
 import io.qameta.allure.junit4.DisplayName;
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import org.hamcrest.CoreMatchers;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
 
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
 
 public class LoginCourierTest {
+    private int courierId;
+    private CourierClient courierClient;
 
     @Before
     public void setUp() {
-        RestAssured.baseURI= "https://qa-scooter.praktikum-services.ru/";
+        courierClient = new CourierClient();
+    }
+
+    @After
+    public void tearDown() {
+        new CourierClient().delete(courierId);
     }
 
     @Test
-    @DisplayName("Login courier without login and check error")
-    public void loginCourierWithoutLoginCheck() {
+    @DisplayName("Login courier and check answer")
+    public void loginCourierCheck() {
         ScooterRegisterCourier scooterRegisterCourier = new ScooterRegisterCourier();
         ArrayList<String> loginPass = scooterRegisterCourier.registerNewCourierAndReturnLoginPassword();
-        String requestBody = "{\"password\":\"" + loginPass.get(1) + "\"}";
-        Response response = given()
-                .header("Content-type", "application/json")
-                .and()
-                .body(requestBody)
-                .when()
-                .post("api/v1/courier/login");
-        response.then().assertThat().body("message", equalTo("Недостаточно данных для входа"))
-                .and()
-                .statusCode(400);
-    }
-
-    @Test
-    @DisplayName("Login courier without password and check error")
-    public void loginCourierWithoutPasswordCheck() {
-        ScooterRegisterCourier scooterRegisterCourier = new ScooterRegisterCourier();
-        ArrayList<String> loginPass = scooterRegisterCourier.registerNewCourierAndReturnLoginPassword();
-        String requestBody = "{\"login\":\"" + loginPass.get(0) + "\"}";
-        Response response = given()
-                .header("Content-type", "application/json")
-                .and()
-                .body(requestBody)
-                .when()
-                .post("api/v1/courier/login");
-        response.then().assertThat().body("message", equalTo("Недостаточно данных для входа"))
-                .and()
-                .statusCode(400);
-    }
-
-    @Test
-    @DisplayName("Login courier with incorrect login and password and check error")
-    public void loginCourierWithIncorrectLogPassCheck() {
-        String requestBody = "{\"login\":\"" + "тест" + "\","
-                + "\"password\":\"" + "тест" + "\"}";
-        Response response = given()
-                .header("Content-type", "application/json")
-                .and()
-                .body(requestBody)
-                .when()
-                .post("api/v1/courier/login");
-        response.then().assertThat().body("message", equalTo("Учетная запись не найдена"))
-                .and()
-                .statusCode(404);
+        Response response = courierClient.loginCourier(loginPass.get(0), loginPass.get(1));
+        assertEquals("StatusCode is incorrect", response.statusCode(), 200);
+        assertThat("ID is incorrect", response.path("id"), is(CoreMatchers.not(0)));
+        courierId = response.path("id");
     }
 }

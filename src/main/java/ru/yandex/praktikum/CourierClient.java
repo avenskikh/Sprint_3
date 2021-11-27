@@ -1,6 +1,7 @@
 package ru.yandex.praktikum;
 
 import io.qameta.allure.Step;
+import io.restassured.response.Response;
 
 import static io.restassured.RestAssured.given;
 
@@ -10,20 +11,16 @@ public class CourierClient extends RestAssuredClient {
 
 
     @Step
-    public boolean create(String login, String password, String firstName) {
+    public Response create(String login, String password, String firstName) {
         String requestBody = "{\"login\":\"" + login + "\","
                 + "\"password\":\"" + password + "\","
                 + "\"firstName\":\"" + firstName + "\"}";
-        return given()
+        Response response = given()
                 .spec(getBaseSpec())
                 .body(requestBody)
                 .when()
-                .post(COURIER_PATH)
-                .then()
-                .assertThat()
-                .statusCode(201)
-                .extract()
-                .path("ok");
+                .post(COURIER_PATH);
+        return response;
     }
 
     @Step
@@ -53,6 +50,18 @@ public class CourierClient extends RestAssuredClient {
                 .statusCode(200)
                 .extract()
                 .path("ok");
+    }
+
+    @Step
+    public Response loginCourier (String login, String password) {
+        String requestBody = "{\"login\":\"" + login + "\","
+                + "\"password\":\"" + password + "\"}";
+        Response response = given()
+                .spec(getBaseSpec())
+                .body(requestBody)
+                .when()
+                .post(COURIER_PATH + "login/");
+        return response;
     }
 }
 

@@ -1,7 +1,7 @@
 package ru.yandex.praktikum;
 
 import io.qameta.allure.junit4.DisplayName;
-import io.restassured.RestAssured;
+import io.restassured.response.Response;
 import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,15 +10,17 @@ import org.junit.runners.Parameterized;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
 
 
 @RunWith(Parameterized.class)
 public class CreateOrderTest {
+    private OrderClient orderClient;
+
 
     @Before
     public void setUp() {
-
-        RestAssured.baseURI= "https://qa-scooter.praktikum-services.ru/";
+        orderClient = new OrderClient();
     }
 
     private final String color;
@@ -40,8 +42,8 @@ public class CreateOrderTest {
     @Test
     @DisplayName("Create order and check answer")
     public void createOrderCheck() {
-        OrderClient orderClient = new OrderClient();
-        int track = orderClient.createOrder(color);
-        assertThat("Order ID is incorrect", track, is(CoreMatchers.not(0)));
+        Response response = orderClient.createOrder(color);
+        assertEquals("StatusCode is incorrect", response.statusCode(), 201);
+        assertThat("Order ID is incorrect", response.path("track"), is(CoreMatchers.not(0)));
     }
 }

@@ -1,5 +1,6 @@
 package ru.yandex.praktikum;
 
+import io.qameta.allure.Step;
 import io.restassured.response.Response;
 import org.apache.commons.lang3.RandomStringUtils;
 
@@ -10,6 +11,7 @@ import static io.restassured.RestAssured.given;
 public class ScooterRegisterCourier {
 
 
+    @Step
     public ArrayList<String> registerNewCourierAndReturnLoginPassword(){
 
         String courierLogin = RandomStringUtils.randomAlphabetic(10);
