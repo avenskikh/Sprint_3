@@ -43,7 +43,7 @@ public class CreateOrderTest {
     @DisplayName("Create order and check answer")
     public void createOrderCheck() {
         Response response = orderClient.createOrder(color);
-        assertEquals("StatusCode is incorrect", response.statusCode(), 201);
+        assertEquals("StatusCode is incorrect", 201, response.statusCode());
         assertThat("Order ID is incorrect", response.path("track"), is(CoreMatchers.not(0)));
     }
 }

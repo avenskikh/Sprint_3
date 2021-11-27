@@ -22,7 +22,7 @@ public class NegativeCreateCourierTest {
         String courierPassword = RandomStringUtils.randomAlphabetic(10);
         String courierFirstName = RandomStringUtils.randomAlphabetic(10);
         Response response = courierClient.create("", courierPassword, courierFirstName);
-        assertEquals("StatusCode is incorrect", response.statusCode(), 400);
+        assertEquals("StatusCode is incorrect", 400, response.statusCode());
         assertEquals("Error message is incorrect", "Недостаточно данных для создания учетной записи", response.path("message"));
     }
 
@@ -32,7 +32,25 @@ public class NegativeCreateCourierTest {
         String courierLogin = RandomStringUtils.randomAlphabetic(10);
         String courierFirstName = RandomStringUtils.randomAlphabetic(10);
         Response response = courierClient.create(courierLogin, "", courierFirstName);
-        assertEquals("StatusCode is incorrect", response.statusCode(), 400);
+        assertEquals("StatusCode is incorrect", 400, response.statusCode());
+        assertEquals("Error message is incorrect", "Недостаточно данных для создания учетной записи", response.path("message"));
+    }
+
+    @Test
+    @DisplayName("Create courier without firstName check error")
+    public void createCourierWithoutFirstNameCheckError() {
+        String courierLogin = RandomStringUtils.randomAlphabetic(10);
+        String courierPassword = RandomStringUtils.randomAlphabetic(10);
+        Response response = courierClient.create(courierLogin, courierPassword, "");
+        assertEquals("StatusCode is incorrect",400, response.statusCode());
+        assertEquals("Error message is incorrect", "Недостаточно данных для создания учетной записи", response.path("message"));
+    }
+
+    @Test
+    @DisplayName("Create courier without required fields")
+    public void createCourierWithoutRequiredFieldsCheckError() {
+        Response response = courierClient.create("", "", "");
+        assertEquals("StatusCode is incorrect", 400, response.statusCode());
         assertEquals("Error message is incorrect", "Недостаточно данных для создания учетной записи", response.path("message"));
     }
 }

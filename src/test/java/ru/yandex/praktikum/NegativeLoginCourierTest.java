@@ -23,7 +23,7 @@ public class NegativeLoginCourierTest {
         ScooterRegisterCourier scooterRegisterCourier = new ScooterRegisterCourier();
         ArrayList<String> loginPass = scooterRegisterCourier.registerNewCourierAndReturnLoginPassword();
         Response response = courierClient.loginCourier("", loginPass.get(1));
-        assertEquals("StatusCode is incorrect", response.statusCode(), 400);
+        assertEquals("StatusCode is incorrect", 400, response.statusCode());
         assertEquals("Error message is incorrect", "Недостаточно данных для входа", response.path("message"));
     }
 
@@ -33,7 +33,7 @@ public class NegativeLoginCourierTest {
         ScooterRegisterCourier scooterRegisterCourier = new ScooterRegisterCourier();
         ArrayList<String> loginPass = scooterRegisterCourier.registerNewCourierAndReturnLoginPassword();
         Response response = courierClient.loginCourier( loginPass.get(0), "");
-        assertEquals("StatusCode is incorrect", response.statusCode(), 400);
+        assertEquals("StatusCode is incorrect", 400, response.statusCode());
         assertEquals("Error message is incorrect", "Недостаточно данных для входа", response.path("message"));
     }
 
@@ -41,7 +41,7 @@ public class NegativeLoginCourierTest {
     @DisplayName("Login courier with incorrect login and password and check error")
     public void loginCourierWithIncorrectLogPassCheck() {
         Response response = courierClient.loginCourier("test", "test");
-        assertEquals("StatusCode is incorrect", response.statusCode(), 404);
+        assertEquals("StatusCode is incorrect", 404, response.statusCode());
         assertEquals("Error message is incorrect", "Учетная запись не найдена", response.path("message"));
     }
 }

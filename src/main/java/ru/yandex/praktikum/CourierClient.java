@@ -2,6 +2,7 @@ package ru.yandex.praktikum;
 
 import io.qameta.allure.Step;
 import io.restassured.response.Response;
+import org.json.JSONObject;
 
 import static io.restassured.RestAssured.given;
 
@@ -12,9 +13,12 @@ public class CourierClient extends RestAssuredClient {
 
     @Step
     public Response create(String login, String password, String firstName) {
-        String requestBody = "{\"login\":\"" + login + "\","
-                + "\"password\":\"" + password + "\","
-                + "\"firstName\":\"" + firstName + "\"}";
+        JSONObject requestBodyJson = new JSONObject();
+        String requestBody = requestBodyJson
+                .put("login", login)
+                .put("password", password)
+                .put("firstName", firstName)
+                .toString();
         Response response = given()
                 .spec(getBaseSpec())
                 .body(requestBody)
@@ -25,8 +29,11 @@ public class CourierClient extends RestAssuredClient {
 
     @Step
     public int login(String login, String password) {
-        String requestBody = "{\"login\":\"" + login + "\","
-                + "\"password\":\"" + password + "\"}";
+        JSONObject requestBodyJson = new JSONObject();
+        String requestBody = requestBodyJson
+                .put("login", login)
+                .put("password", password)
+                .toString();
         return given()
                 .spec(getBaseSpec())
                 .body(requestBody)
@@ -54,8 +61,11 @@ public class CourierClient extends RestAssuredClient {
 
     @Step
     public Response loginCourier (String login, String password) {
-        String requestBody = "{\"login\":\"" + login + "\","
-                + "\"password\":\"" + password + "\"}";
+        JSONObject requestBodyJson = new JSONObject();
+        String requestBody = requestBodyJson
+                .put("login", login)
+                .put("password", password)
+                .toString();
         Response response = given()
                 .spec(getBaseSpec())
                 .body(requestBody)
@@ -64,4 +74,3 @@ public class CourierClient extends RestAssuredClient {
         return response;
     }
 }
-

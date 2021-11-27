@@ -33,7 +33,7 @@ public class LoginCourierTest {
         ScooterRegisterCourier scooterRegisterCourier = new ScooterRegisterCourier();
         ArrayList<String> loginPass = scooterRegisterCourier.registerNewCourierAndReturnLoginPassword();
         Response response = courierClient.loginCourier(loginPass.get(0), loginPass.get(1));
-        assertEquals("StatusCode is incorrect", response.statusCode(), 200);
+        assertEquals("StatusCode is incorrect", 200, response.statusCode());
         assertThat("ID is incorrect", response.path("id"), is(CoreMatchers.not(0)));
         courierId = response.path("id");
     }

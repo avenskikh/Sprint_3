@@ -5,7 +5,9 @@ import io.restassured.response.Response;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.assertEquals;
 
 public class OrdersListTest {
     private OrderClient orderClient;
@@ -20,10 +22,7 @@ public class OrdersListTest {
     @DisplayName("Check orders list")
     public void checkOrderList() {
         Response response = orderClient.getOrders();
-        response.then()
-                .log().all()
-                .assertThat().body("orders", notNullValue())
-                .and()
-                .statusCode(200);
+        assertEquals("StatusCode is incorrect", 200, response.statusCode());
+        assertThat("ID is incorrect", response.path("orders"), notNullValue());
     }
 }

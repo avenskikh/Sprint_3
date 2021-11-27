@@ -31,7 +31,7 @@ public class CreateCourierTest {
         String courierFirstName = RandomStringUtils.randomAlphabetic(10);
         Response response = courierClient.create(courierLogin, courierPassword, courierFirstName);
         courierId = courierClient.login(courierLogin, courierPassword);
-        assertEquals("StatusCode is incorrect", response.statusCode(), 201);
+        assertEquals("StatusCode is incorrect", 201, response.statusCode());
         assertEquals("Courier isn't created", true, response.path("ok"));
     }
 
@@ -46,7 +46,7 @@ public class CreateCourierTest {
         String courierPassword2 = RandomStringUtils.randomAlphabetic(10);
         String courierFirstName2 = RandomStringUtils.randomAlphabetic(10);
         Response response = courierClient.create(courierLogin, courierPassword2, courierFirstName2);
-        assertEquals("StatusCode is incorrect", response.statusCode(), 409);
+        assertEquals("StatusCode is incorrect", 409, response.statusCode());
         assertEquals("Error message is incorrect", "Этот логин уже используется. Попробуйте другой.", response.path("message"));
     }
 
@@ -59,7 +59,7 @@ public class CreateCourierTest {
         courierClient.create(courierLogin, courierPassword, courierFirstName);
         courierId = courierClient.login(courierLogin, courierPassword);
         Response response = courierClient.create(courierLogin, courierPassword, courierFirstName);
-        assertEquals("StatusCode is incorrect", response.statusCode(), 409);
+        assertEquals("StatusCode is incorrect", 409, response.statusCode());
         assertEquals("Error message is incorrect", "Этот логин уже используется. Попробуйте другой.", response.path("message"));
     }
 }
